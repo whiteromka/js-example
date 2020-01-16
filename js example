@@ -1,0 +1,28 @@
+document.addEventListener('DOMContentLoaded', function(){
+...
+});
+
+
+/**
+ *  Заменяет часть атрибута href у ссылки. Находит внутри ссылки параметр 'promocodeMode' и заменяет на val
+ */
+function replaceHref() {
+    var href = $('#js_btn_apply_filter').attr('href'); // в этом адресе нужно заменить параметр 'promocodeMode'
+
+    if (href.search(/promocodeMode/gi) === -1) { // если параметра promocodeMode нет, вставить его в href
+        href = href + ((href.search(/\?/gi) === -1) ? '?' : '&') + 'promocodeMode=promocodeModeHandle';
+    }
+    // производим замену
+    var newHref = href.replace(/promocodeModeHandle|promocodeModeAutomatic|promocodeModeAll/gi, function(s){
+        return $('input[name=promocodeMode]:checked').val();
+    });
+    $('#js_btn_apply_filter').attr('href', newHref); // вставляем href обратно в ссылку
+}
+
+
+// Динамически навешанные события т.к. на странице используется Pjax
+$(function() {
+    $(document).on('click touchstart', '#js_btn_apply_filter', function(){
+        replaceHref();
+    });
+});
